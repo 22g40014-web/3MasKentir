@@ -1,4 +1,37 @@
 <!DOCTYPE html>
+
+<?php
+session_start();
+include "koneksi.php";
+
+if (isset($_POST['login'])) {
+    $username = mysqli_real_escape_string($conn, $_POST['username']);
+    $password = $_POST['password'];
+    $role     = $_POST['role'];
+
+    $query = mysqli_query($conn, 
+        "SELECT * FROM users 
+         WHERE username='$username' AND role='$role'"
+    );
+
+    $data = mysqli_fetch_assoc($query);
+
+    if ($data && password_verify($password, $data['password'])) {
+        $_SESSION['username'] = $data['username'];
+        $_SESSION['role']     = $data['role'];
+
+        if ($role == 'admin') {
+            header("Location: admindashboard.php");
+        } else {
+            header("Location: pemilikdashboard.php");
+        }
+        exit;
+    } else {
+        $error = "Username / Password / Role salah!";
+    }
+}
+?>
+
 <html>
 
 <head>
@@ -715,55 +748,40 @@
   <!-- footer section -->
 
   <!-- LOGIN MODAL -->
-<div id="loginModal" class="login-modal">
-  <div class="login-box">
-    <span class="close-btn" onclick="closeLogin()">×</span>
+   <?php if (isset($error)) : ?>
+      <p style="color:red; text-align:center;">
+        <?= $error ?>
+      </p>
+    <?php endif; ?>
 
-    <h3>Login</h3>
+    <div id="loginModal" class="login-modal">
+      <div class="login-box">
+        <span class="close-btn" onclick="closeLogin()">×</span>
 
-    <form onsubmit="return loginUser()">
-      <input type="text" id="username" placeholder="Username" required>
-      <input type="password" id="password" placeholder="Password" required>
+        <h3>Login</h3>
 
-      <select id="role" required>
-        <option value="">Pilih Role</option>
-        <option value="admin">Admin</option>
-        <option value="pemilik">Pemilik</option>
-      </select>
+        <form method="POST" action="proses_login.php">
+          <input type="text" name="username" required>
+          <input type="password" name="password" required>
+          <button type="submit">Login</button>
+        </form>
 
-      <button type="submit">Login</button>
-    </form>
-  </div>
-</div>
-<!-- LOGIN MODAL -->
+      </div>
+    </div>
+    <!-- LOGIN MODAL -->
 
-<!-- script JAVASCRIPT LOGIN MODAL -->
- <script>
-function openLogin() {
-  document.getElementById("loginModal").style.display = "flex";
-}
+    <!-- script JAVASCRIPT LOGIN MODAL -->
+    <script>
+    function openLogin() {
+      document.getElementById("loginModal").style.display = "flex";
+    }
 
-function closeLogin() {
-  document.getElementById("loginModal").style.display = "none";
-}
+    function closeLogin() {
+      document.getElementById("loginModal").style.display = "none";
+    }
 
-function loginUser() {
-  const role = document.getElementById("role").value;
-
-  if (role === "admin") {
-    window.location.href = "admindashboard.html";
-  } 
-  else if (role === "pemilik") {
-    window.location.href = "pemilikdashboard.html";
-    // nanti bisa dikembangkan: pemilik1.html - pemilik10.html
-  } 
-  else {
-    alert("Pilih role terlebih dahulu!");
-  }
-  return false;
-}
-</script>
-<!-- script JAVASCRIPT LOGIN MODAL -->
+    </script>
+    <!-- script JAVASCRIPT LOGIN MODAL -->
 
 
 
