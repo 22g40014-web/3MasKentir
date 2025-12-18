@@ -2,7 +2,7 @@
 
 <?php
 session_start();
-include "koneksi.php";
+//include "koneksi.php";
 
 if (isset($_POST['login'])) {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
@@ -748,40 +748,48 @@ if (isset($_POST['login'])) {
   <!-- footer section -->
 
   <!-- LOGIN MODAL -->
-   <?php if (isset($error)) : ?>
-      <p style="color:red; text-align:center;">
-        <?= $error ?>
-      </p>
-    <?php endif; ?>
+      <?php if (isset($error)) : ?>
+        <p style="color:red; text-align:center;">
+          <?= htmlspecialchars($error); ?>
+        </p>
+      <?php endif; ?>
 
-    <div id="loginModal" class="login-modal">
-      <div class="login-box">
-        <span class="close-btn" onclick="closeLogin()">×</span>
+      <div id="loginModal" class="login-modal">
+        <div class="login-box">
+          <span class="close-btn" onclick="closeLogin()">×</span>
 
-        <h3>Login</h3>
+          <h3>Login</h3>
 
-        <form method="POST" action="proses_login.php">
-          <input type="text" name="username" required>
-          <input type="password" name="password" required>
-          <button type="submit">Login</button>
-        </form>
+          <form method="POST" action="proses_login.php">
+            
+            <div class="form-group">
+              <small>Username</small>
+              <input type="text" name="username" required>
+            </div>
 
+            <div class="form-group">
+              <small>Password</small>
+              <input type="password" name="password" required>
+            </div>
+
+            <button type="submit">Login</button>
+          </form>
+
+        </div>
       </div>
-    </div>
-    <!-- LOGIN MODAL -->
+      <!-- LOGIN MODAL -->
 
-    <!-- script JAVASCRIPT LOGIN MODAL -->
-    <script>
-    function openLogin() {
-      document.getElementById("loginModal").style.display = "flex";
-    }
+      <!-- SCRIPT JAVASCRIPT LOGIN MODAL -->
+      <script>
+      function openLogin() {
+        document.getElementById("loginModal").style.display = "flex";
+      }
 
-    function closeLogin() {
-      document.getElementById("loginModal").style.display = "none";
-    }
+      function closeLogin() {
+        document.getElementById("loginModal").style.display = "none";
+      }
+      </script>
 
-    </script>
-    <!-- script JAVASCRIPT LOGIN MODAL -->
 
 
 
